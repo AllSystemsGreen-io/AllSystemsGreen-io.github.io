@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="whalepasta-title whalepasta-desc">
+  <title id="whalepasta-title">WhalePasta public-safe interface mockup</title>
+  <desc id="whalepasta-desc">A sanitized visual mockup with private data removed.</desc>
+  <defs>
+    <linearGradient id="whalepasta-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#071315"/>
+      <stop offset=".52" stop-color="#0d1c1c"/>
+      <stop offset="1" stop-color="#1d2416"/>
+    </linearGradient>
+    <radialGradient id="whalepasta-glow" cx=".76" cy=".14" r=".9">
+      <stop offset="0" stop-color="#66e2ff" stop-opacity=".5"/>
+      <stop offset=".42" stop-color="#f58d42" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="whalepasta-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".32"/>
+    </filter>
+    <style>
+      .title { font: 800 42px Inter, Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
+      .sub { font: 500 18px Inter, Arial, sans-serif; fill: rgba(247,255,247,.72); letter-spacing: 0; }
+      .nav { font: 700 13px Inter, Arial, sans-serif; fill: rgba(247,255,247,.56); letter-spacing: .06em; }
+      .kicker { font: 800 13px Inter, Arial, sans-serif; fill: rgba(247,255,247,.68); letter-spacing: .08em; text-transform: uppercase; }
+      .badge { font: 800 10px Inter, Arial, sans-serif; fill: #07110d; text-anchor: middle; letter-spacing: .04em; }
+      .tiny { font: 700 11px Inter, Arial, sans-serif; fill: rgba(247,255,247,.5); letter-spacing: .06em; }
+      .label { font: 700 15px Inter, Arial, sans-serif; fill: rgba(247,255,247,.76); letter-spacing: 0; }
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="url(#whalepasta-bg)"/>
+  <rect width="1200" height="760" fill="url(#whalepasta-glow)"/>
+  <path d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="#66e2ff" stroke-width="2" opacity=".32"/>
+  <path d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="#f58d42" stroke-width="2" opacity=".26"/>
+  <g filter="url(#whalepasta-shadow)">
+    <rect x="72" y="82" width="1056" height="596" rx="18" fill="rgba(4,10,8,.74)" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <rect x="72" y="82" width="1056" height="58" rx="18" fill="rgba(255,255,255,.08)"/>
+    <circle cx="104" cy="111" r="7" fill="#f06a5b"/>
+    <circle cx="130" cy="111" r="7" fill="#f4c95d"/>
+    <circle cx="156" cy="111" r="7" fill="#79d279"/>
+    <text x="190" y="116" class="nav">PUBLIC MOCK / PRIVATE DATA REDACTED</text>
+    <text x="990" y="116" class="tiny">STATIC PREVIEW</text>
+    <text x="112" y="206" class="title">WhalePasta</text>
+    <text x="114" y="240" class="sub">Private decision-loop lab with risk gates, monitoring, and rollback habits.</text>
+    
+        <rect x="112" y="292" width="286" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="130" y="322" class="kicker">risk gates</text>
+        
+              <rect x="130" y="346" width="210" height="9" rx="4.5" fill="#66e2ff"/>
+              <rect x="130" y="362" width="121.8" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="130" y="380" width="160" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="130" y="396" width="92.8" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="130" y="414" width="230" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="130" y="430" width="133.39999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+        
+              <rect x="130" y="540" width="78" height="22" rx="11" fill="#66e2ff" opacity=".92"/>
+              <text x="169" y="555" class="badge">cap</text>
+              <rect x="224" y="540" width="78" height="22" rx="11" fill="#66e2ff" opacity=".92"/>
+              <text x="263" y="555" class="badge">pause</text>
+        <rect x="432" y="292" width="326" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="450" y="322" class="kicker">signal watch</text>
+        
+              <rect x="450" y="346" width="250" height="9" rx="4.5" fill="#b7f36b"/>
+              <rect x="450" y="362" width="145" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="450" y="380" width="206" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="450" y="396" width="119.47999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="450" y="414" width="272" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="450" y="430" width="157.76" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+        
+              <rect x="450" y="540" width="78" height="22" rx="11" fill="#66e2ff" opacity=".92"/>
+              <text x="489" y="555" class="badge">paper</text>
+              <rect x="544" y="540" width="78" height="22" rx="11" fill="#66e2ff" opacity=".92"/>
+              <text x="583" y="555" class="badge">canary</text>
+        <rect x="792" y="292" width="284" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="810" y="322" class="kicker">audit trail</text>
+        
+              <rect x="810" y="346" width="198" height="9" rx="4.5" fill="#f58d42"/>
+              <rect x="810" y="362" width="114.83999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="810" y="380" width="230" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="810" y="396" width="133.39999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="810" y="414" width="176" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="810" y="430" width="102.08" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+        
+              <rect x="810" y="540" width="78" height="22" rx="11" fill="#66e2ff" opacity=".92"/>
+              <text x="849" y="555" class="badge">trace</text>
+              <rect x="904" y="540" width="78" height="22" rx="11" fill="#66e2ff" opacity=".92"/>
+              <text x="943" y="555" class="badge">exit</text>
+    
+      <polyline points="454,516 500,472 548,498 600,394 646,420 718,350" fill="none" stroke="#66e2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="718" cy="350" r="8" fill="#b7f36b"/>
+      <text x="112" y="618" class="label">Numbers, identifiers, addresses, and live strategy details are intentionally absent.</text>
+  </g>
+</svg>

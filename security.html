@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+    >
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="Security posture and responsible disclosure for AllSystemsGreen.io, LLC.">
+    <title>Security · AllSystemsGreen.io</title>
+    <link rel="canonical" href="https://www.allsystemsgreen.io/security.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href="/" aria-label="AllSystemsGreen.io home">
+        <span class="brand-mark" aria-hidden="true">ASG</span>
+        <span class="brand-name">AllSystemsGreen.io</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="legal-hero">
+        <div class="section-inner">
+          <p class="eyebrow">Responsible disclosure</p>
+          <h1>Security</h1>
+          <p class="hero-lede">This site is static by design. That reduces attack surface, but no public website is hackproof.</p>
+        </div>
+      </section>
+
+      <article class="legal-content">
+        <h2>Public Site Posture</h2>
+        <ul>
+          <li>No public login, database, CMS, contact form, or account system.</li>
+          <li>No client-side secrets, third-party scripts, analytics pixels, cookies, or trackers.</li>
+          <li>Static-host headers are included for CSP, framing protection, MIME sniffing protection, referrer limits, and permissions limits.</li>
+          <li>Public project visuals are sanitized and do not contain live operational data.</li>
+        </ul>
+
+        <h2>Testing Rules</h2>
+        <p>
+          Do not attempt to access private systems, non-public endpoints, admin surfaces, employee
+          accounts, cloud consoles, email accounts, repositories, or third-party providers without
+          explicit written authorization.
+        </p>
+        <p>
+          Do not run denial-of-service tests, social engineering, phishing, credential attacks,
+          persistence attempts, destructive scans, data exfiltration, or tests that could disrupt
+          workers, vendors, collaborators, or public services.
+        </p>
+
+        <h2>Reporting</h2>
+        <p>
+          Send a concise report to
+          <a href="mailto:olivia@allsystemsgreen.io?subject=Security%20report%20for%20AllSystemsGreen.io">olivia@allsystemsgreen.io</a>
+          with the affected URL, steps to reproduce, impact, and any safe proof of concept. Please do
+          not include secrets or personal data.
+        </p>
+
+        <h2>No Public Bug Bounty</h2>
+        <p>
+          We do not currently operate a public bug bounty program. Reports are appreciated, but no
+          reward, engagement, authorization expansion, or response timeline is promised unless agreed
+          in writing.
+        </p>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>
+          <p class="footer-brand">AllSystemsGreen.io, LLC</p>
+          <p>80 E Park Suite 9, Butte, MT 59701 · Montana / Silver Bow County</p>
+        </div>
+        <nav aria-label="Legal navigation">
+          <a href="/">Home</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

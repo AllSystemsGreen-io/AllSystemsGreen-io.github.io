@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="civdex-title civdex-desc">
+  <title id="civdex-title">CivDex public-safe interface mockup</title>
+  <desc id="civdex-desc">A sanitized visual mockup with private data removed.</desc>
+  <defs>
+    <linearGradient id="civdex-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#13130d"/>
+      <stop offset=".52" stop-color="#1d1d15"/>
+      <stop offset="1" stop-color="#1a241d"/>
+    </linearGradient>
+    <radialGradient id="civdex-glow" cx=".76" cy=".14" r=".9">
+      <stop offset="0" stop-color="#f2d35f" stop-opacity=".5"/>
+      <stop offset=".42" stop-color="#39c6ad" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="civdex-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".32"/>
+    </filter>
+    <style>
+      .title { font: 800 42px Inter, Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
+      .sub { font: 500 18px Inter, Arial, sans-serif; fill: rgba(247,255,247,.72); letter-spacing: 0; }
+      .nav { font: 700 13px Inter, Arial, sans-serif; fill: rgba(247,255,247,.56); letter-spacing: .06em; }
+      .kicker { font: 800 13px Inter, Arial, sans-serif; fill: rgba(247,255,247,.68); letter-spacing: .08em; text-transform: uppercase; }
+      .badge { font: 800 10px Inter, Arial, sans-serif; fill: #07110d; text-anchor: middle; letter-spacing: .04em; }
+      .tiny { font: 700 11px Inter, Arial, sans-serif; fill: rgba(247,255,247,.5); letter-spacing: .06em; }
+      .label { font: 700 15px Inter, Arial, sans-serif; fill: rgba(247,255,247,.76); letter-spacing: 0; }
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="url(#civdex-bg)"/>
+  <rect width="1200" height="760" fill="url(#civdex-glow)"/>
+  <path d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="#f2d35f" stroke-width="2" opacity=".32"/>
+  <path d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="#39c6ad" stroke-width="2" opacity=".26"/>
+  <g filter="url(#civdex-shadow)">
+    <rect x="72" y="82" width="1056" height="596" rx="18" fill="rgba(4,10,8,.74)" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <rect x="72" y="82" width="1056" height="58" rx="18" fill="rgba(255,255,255,.08)"/>
+    <circle cx="104" cy="111" r="7" fill="#f06a5b"/>
+    <circle cx="130" cy="111" r="7" fill="#f4c95d"/>
+    <circle cx="156" cy="111" r="7" fill="#79d279"/>
+    <text x="190" y="116" class="nav">PUBLIC MOCK / PRIVATE DATA REDACTED</text>
+    <text x="990" y="116" class="tiny">STATIC PREVIEW</text>
+    <text x="112" y="206" class="title">CivDex</text>
+    <text x="114" y="240" class="sub">Source-backed civic contact intelligence for public-interest infrastructure.</text>
+    
+        <rect x="112" y="292" width="304" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="130" y="322" class="kicker">public source</text>
+        
+              <rect x="130" y="346" width="226" height="9" rx="4.5" fill="#f2d35f"/>
+              <rect x="130" y="362" width="131.07999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="130" y="380" width="246" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="130" y="396" width="142.67999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="130" y="414" width="194" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="130" y="430" width="112.52" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="130" y="448" width="220" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="130" y="464" width="127.6" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+        
+              <rect x="130" y="540" width="78" height="22" rx="11" fill="#f2d35f" opacity=".92"/>
+              <text x="169" y="555" class="badge">html</text>
+              <rect x="224" y="540" width="78" height="22" rx="11" fill="#f2d35f" opacity=".92"/>
+              <text x="263" y="555" class="badge">cite</text>
+        <rect x="448" y="292" width="300" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="466" y="322" class="kicker">graph</text>
+        
+              <rect x="466" y="346" width="210" height="9" rx="4.5" fill="#39c6ad"/>
+              <rect x="466" y="362" width="121.8" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="466" y="380" width="174" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="466" y="396" width="100.91999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="466" y="414" width="244" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="466" y="430" width="141.51999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="466" y="448" width="186" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="466" y="464" width="107.88" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+        
+              <rect x="466" y="540" width="78" height="22" rx="11" fill="#f2d35f" opacity=".92"/>
+              <text x="505" y="555" class="badge">office</text>
+              <rect x="560" y="540" width="78" height="22" rx="11" fill="#f2d35f" opacity=".92"/>
+              <text x="599" y="555" class="badge">route</text>
+        <rect x="780" y="292" width="296" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="798" y="322" class="kicker">review</text>
+        
+              <rect x="798" y="346" width="218" height="9" rx="4.5" fill="#b7f36b"/>
+              <rect x="798" y="362" width="126.44" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="798" y="380" width="196" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="798" y="396" width="113.67999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="798" y="414" width="236" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="798" y="430" width="136.88" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect x="798" y="448" width="170" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect x="798" y="464" width="98.6" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+        
+              <rect x="798" y="540" width="78" height="22" rx="11" fill="#f2d35f" opacity=".92"/>
+              <text x="837" y="555" class="badge">human</text>
+              <rect x="892" y="540" width="78" height="22" rx="11" fill="#f2d35f" opacity=".92"/>
+              <text x="931" y="555" class="badge">care</text>
+    
+      <circle cx="594" cy="410" r="18" fill="#f2d35f"/>
+      <circle cx="656" cy="472" r="13" fill="#39c6ad"/>
+      <circle cx="542" cy="500" r="11" fill="#b7f36b"/>
+      <path d="M594 410 L656 472 L542 500 Z" fill="none" stroke="rgba(247,255,247,.5)" stroke-width="3"/>
+      <text x="112" y="618" class="label">Civic systems should be source-backed, careful, and useful to ordinary people.</text>
+  </g>
+</svg>
