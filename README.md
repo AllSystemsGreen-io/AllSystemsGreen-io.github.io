@@ -16,6 +16,7 @@ The site is deployed alongside TelemetryBase on Hetzner server `ctrl-telemetryba
 
 - VPS IPv4: `87.99.142.245`
 - Static release root: `/var/www/allsystemsgreen.io/current`
+- TLS certificate: `/etc/letsencrypt/live/allsystemsgreen.io/fullchain.pem`
 - Nginx vhost: `/etc/nginx/sites-available/allsystemsgreen.io`
 - Versioned vhost source: `deploy/nginx/allsystemsgreen.io.conf`
 
@@ -24,7 +25,7 @@ DNS cutover records:
 - `allsystemsgreen.io` A -> `87.99.142.245`
 - `www.allsystemsgreen.io` CNAME -> `allsystemsgreen.io`
 
-After DNS points to Hetzner, issue TLS on the VPS:
+TLS is issued by Certbot on the VPS. To renew or repair it manually:
 
 ```bash
 certbot --nginx -d allsystemsgreen.io -d www.allsystemsgreen.io
