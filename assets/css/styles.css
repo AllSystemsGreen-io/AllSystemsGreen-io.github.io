@@ -89,6 +89,16 @@ a {
   min-width: 0;
 }
 
+.brand-logo {
+  width: clamp(10rem, 19vw, 15rem);
+  height: 2.15rem;
+  padding: 0.16rem 0.22rem;
+  border-radius: 4px;
+  background: #f9fff7;
+  object-fit: contain;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
 .brand-mark {
   display: grid;
   place-items: center;
@@ -106,6 +116,15 @@ a {
 .footer-brand {
   font-weight: 850;
   letter-spacing: 0;
+}
+
+.brand-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .site-nav {
@@ -598,6 +617,10 @@ h3 {
 @media (max-width: 540px) {
   .brand-name {
     font-size: 0.95rem;
+  }
+
+  .brand-logo {
+    width: min(13.6rem, calc(100vw - 6.2rem));
   }
 
   .site-nav {
