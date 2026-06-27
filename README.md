@@ -7,7 +7,28 @@ Static public site for AllSystemsGreen.io, LLC.
 - Static HTML/CSS/SVG only.
 - No public login, CMS, database, form backend, analytics, cookies, third-party scripts, or client-side secrets.
 - Security headers are defined in `_headers` for static hosts that support Netlify/Cloudflare Pages style header files.
+- Hetzner/nginx security headers are defined in `deploy/nginx/allsystemsgreen.io.conf`.
 - Project visuals are generated sanitized mockups, not production screenshots.
+
+## Hetzner Hosting
+
+The site is deployed alongside TelemetryBase on Hetzner server `ctrl-telemetrybase-01`.
+
+- VPS IPv4: `87.99.142.245`
+- Static release root: `/var/www/allsystemsgreen.io/current`
+- Nginx vhost: `/etc/nginx/sites-available/allsystemsgreen.io`
+- Versioned vhost source: `deploy/nginx/allsystemsgreen.io.conf`
+
+DNS cutover records:
+
+- `allsystemsgreen.io` A -> `87.99.142.245`
+- `www.allsystemsgreen.io` CNAME -> `allsystemsgreen.io`
+
+After DNS points to Hetzner, issue TLS on the VPS:
+
+```bash
+certbot --nginx -d allsystemsgreen.io -d www.allsystemsgreen.io
+```
 
 ## Local Preview
 
