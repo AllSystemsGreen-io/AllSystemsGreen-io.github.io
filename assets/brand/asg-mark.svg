@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">ASG mark</title>
+  <desc id="desc">A compact All Systems Green monogram with status lights and a systems ring.</desc>
+  <defs>
+    <linearGradient id="field" x1="30" y1="20" x2="226" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101815"/>
+      <stop offset="0.55" stop-color="#08100d"/>
+      <stop offset="1" stop-color="#12231b"/>
+    </linearGradient>
+    <linearGradient id="signal" x1="42" y1="44" x2="214" y2="212" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2d35f"/>
+      <stop offset="0.44" stop-color="#b7f36b"/>
+      <stop offset="1" stop-color="#39c6ad"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.45 0 0 0 0 0.95 0 0 0 0 0.42 0 0 0 0.7 0" result="color"/>
+      <feMerge>
+        <feMergeNode in="color"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="46" fill="url(#field)"/>
+  <rect x="9" y="9" width="238" height="238" rx="39" fill="none" stroke="#f5fff3" stroke-opacity="0.18" stroke-width="2"/>
+  <path d="M58 132a72 72 0 1 1 21 51" fill="none" stroke="url(#signal)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M72 180 47 180 47 155" fill="none" stroke="#39c6ad" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M54 69h148M54 187h148" stroke="#f5fff3" stroke-opacity="0.16" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="70" cy="69" r="5" fill="#f2d35f"/>
+  <circle cx="128" cy="69" r="5" fill="#b7f36b"/>
+  <circle cx="186" cy="69" r="5" fill="#39c6ad"/>
+  <text x="128" y="151" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="70" font-weight="900" fill="#f5fff3">ASG</text>
+  <path d="M82 168h92" stroke="url(#signal)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+</svg>
