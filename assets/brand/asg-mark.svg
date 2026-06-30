@@ -1,27 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-  <title id="title">AllSystemsGreen.io status light</title>
-  <desc id="desc">A green mission-control indicator light on a dark instrument panel.</desc>
+  <title id="title">AllSystemsGreen.io GO mark</title>
+  <desc id="desc">A bright green GO status module on a dark mission-control panel.</desc>
   <defs>
-    <radialGradient id="lamp" cx="42%" cy="34%" r="62%">
-      <stop offset="0" stop-color="#f4ffd8"/>
-      <stop offset="0.24" stop-color="#b9ff5a"/>
-      <stop offset="0.62" stop-color="#51c928"/>
-      <stop offset="1" stop-color="#12690f"/>
-    </radialGradient>
-    <filter id="lampGlow" x="-45%" y="-45%" width="190%" height="190%">
-      <feGaussianBlur stdDeviation="10" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.48 0 0 0 0 1 0 0 0 0 0.18 0 0 0 0.78 0" result="glow"/>
+    <linearGradient id="goLamp" x1="43" y1="63" x2="213" y2="193" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d9ff91"/>
+      <stop offset="0.36" stop-color="#35ff4f"/>
+      <stop offset="1" stop-color="#12a92f"/>
+    </linearGradient>
+    <filter id="goGlow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.2 0 0 0 0 1 0 0 0 0 0.28 0 0 0 0.72 0" result="glow"/>
       <feMerge>
         <feMergeNode in="glow"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <rect width="256" height="256" rx="30" fill="#161713"/>
-  <rect x="12" y="12" width="232" height="232" rx="22" fill="#25251f" stroke="#ddd4b6" stroke-opacity="0.24" stroke-width="4"/>
-  <rect x="31" y="31" width="194" height="194" rx="12" fill="#0b0c09" stroke="#070806" stroke-width="8"/>
-  <circle cx="128" cy="128" r="72" fill="#070806" stroke="#6b6758" stroke-width="10"/>
-  <circle cx="128" cy="128" r="54" fill="url(#lamp)" filter="url(#lampGlow)"/>
-  <path d="M100 103c11-13 31-20 49-14" fill="none" stroke="#ffffff" stroke-opacity="0.42" stroke-width="11" stroke-linecap="round"/>
-  <path d="M55 57h34M167 57h34M55 199h34M167 199h34" stroke="#ddd4b6" stroke-opacity="0.32" stroke-width="7" stroke-linecap="round"/>
+  <rect width="256" height="256" rx="30" fill="#151611"/>
+  <rect x="13" y="13" width="230" height="230" rx="22" fill="#26251c" stroke="#ddd4b6" stroke-opacity="0.28" stroke-width="4"/>
+  <path d="M43 61h170v134H43z" fill="#080a07" stroke="#070806" stroke-width="8"/>
+  <rect x="61" y="77" width="134" height="102" rx="10" fill="url(#goLamp)" filter="url(#goGlow)"/>
+  <text x="128" y="146" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="58" font-weight="900" fill="#071008">GO</text>
+  <path d="M45 43h47M164 43h47M45 213h47M164 213h47" stroke="#ddd4b6" stroke-opacity="0.34" stroke-width="7" stroke-linecap="round"/>
 </svg>

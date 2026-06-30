@@ -9,8 +9,8 @@
   --dim: rgba(243, 237, 216, 0.68);
   --line: rgba(221, 212, 182, 0.2);
   --line-strong: rgba(221, 212, 182, 0.34);
-  --green: #b9ff5a;
-  --green-deep: #214d16;
+  --green: #35ff4f;
+  --green-deep: #0f7a28;
   --amber: #f0b84f;
   --red: #d45d4c;
   --steel: #77705d;
@@ -102,7 +102,7 @@ a {
   display: block;
   width: 2.55rem;
   aspect-ratio: 1;
-  filter: drop-shadow(0 0 10px rgba(185, 255, 90, 0.18));
+  filter: drop-shadow(0 0 10px rgba(53, 255, 79, 0.2));
 }
 
 .brand-name,
@@ -194,12 +194,12 @@ a {
   pointer-events: none;
 }
 
+.panel-heading,
 .panel-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  min-height: 3.1rem;
   padding: 0.65rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -212,42 +212,45 @@ a {
   text-transform: uppercase;
 }
 
-.lamp {
-  width: 1.35rem;
-  aspect-ratio: 1;
-  border: 3px solid #070806;
-  border-radius: 50%;
-  box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.22), 0 0 16px rgba(0, 0, 0, 0.5);
+.panel-heading {
+  min-height: 2.6rem;
+  border-color: rgba(240, 184, 79, 0.32);
+  color: var(--amber);
 }
 
-.lamp-green {
-  background: radial-gradient(circle at 34% 28%, #f5ffd9 0 12%, var(--green) 32%, #248c1c 100%);
-  box-shadow: 0 0 18px rgba(185, 255, 90, 0.5);
+.panel-heading b,
+.panel-row b {
+  color: var(--paper);
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
-.lamp-amber {
-  background: radial-gradient(circle at 34% 28%, #fff0c8 0 12%, var(--amber) 34%, #845012 100%);
+.panel-row {
+  min-height: 3.1rem;
 }
 
-.panel-meter {
-  height: 1rem;
-  padding: 3px;
-  border: 1px solid var(--steel);
-  border-radius: 999px;
-  background: #070806;
+.panel-row b {
+  min-width: 5.3rem;
+  padding: 0.28rem 0.45rem;
+  border-radius: 4px;
+  text-align: center;
 }
 
-.panel-meter span {
-  display: block;
-  width: 74%;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
+.go-state {
+  background: var(--green);
+  color: #071008 !important;
+  box-shadow: 0 0 18px rgba(53, 255, 79, 0.35);
+}
+
+.hold-state {
+  border: 1px solid rgba(240, 184, 79, 0.46);
+  background: rgba(240, 184, 79, 0.13);
+  color: var(--amber) !important;
 }
 
 .panel-readout {
   padding: 1rem 0.9rem;
-  border: 1px solid rgba(185, 255, 90, 0.4);
+  border: 1px solid rgba(53, 255, 79, 0.44);
   border-radius: 5px;
   background: #091009;
   color: var(--green);
@@ -256,7 +259,7 @@ a {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-align: center;
-  text-shadow: 0 0 14px rgba(185, 255, 90, 0.35);
+  text-shadow: 0 0 14px rgba(53, 255, 79, 0.38);
 }
 
 .eyebrow {
@@ -323,7 +326,7 @@ h3 {
   max-width: 51rem;
   margin: 0;
   padding: 1rem 1.05rem;
-  border: 1px solid rgba(185, 255, 90, 0.34);
+  border: 1px solid rgba(53, 255, 79, 0.34);
   border-left: 7px solid var(--green);
   border-radius: 5px;
   background: #0d120b;
@@ -360,7 +363,7 @@ h3 {
 .button-primary {
   background: var(--green);
   color: #071008;
-  box-shadow: 0 0 24px rgba(185, 255, 90, 0.18);
+  box-shadow: 0 0 24px rgba(53, 255, 79, 0.2);
 }
 
 .button-secondary {
@@ -371,6 +374,12 @@ h3 {
 
 .section {
   padding: clamp(4rem, 9vw, 7rem) clamp(1rem, 5vw, 4rem);
+}
+
+#portfolio,
+#flight-rules,
+#contact {
+  scroll-margin-top: 7.25rem;
 }
 
 .section-inner {
@@ -526,7 +535,7 @@ h3 {
 .flight-rules {
   border-block: 2px solid var(--line);
   background:
-    linear-gradient(135deg, rgba(185, 255, 90, 0.08), transparent 36%),
+    linear-gradient(135deg, rgba(53, 255, 79, 0.08), transparent 36%),
     linear-gradient(315deg, rgba(212, 93, 76, 0.08), transparent 44%),
     var(--panel-2);
 }
@@ -541,10 +550,10 @@ h3 {
   justify-items: start;
   gap: 0.45rem;
   padding: clamp(2rem, 5vw, 4rem);
-  border: 2px solid rgba(185, 255, 90, 0.32);
+  border: 2px solid rgba(53, 255, 79, 0.34);
   border-radius: 8px;
   background:
-    linear-gradient(90deg, rgba(185, 255, 90, 0.11), transparent 36%),
+    linear-gradient(90deg, rgba(53, 255, 79, 0.12), transparent 36%),
     var(--panel);
   box-shadow: var(--shadow);
 }
@@ -556,6 +565,16 @@ h3 {
 
 .contact-panel .button {
   margin-top: 0.8rem;
+}
+
+.contact-email {
+  display: inline-flex;
+  margin-top: 0.75rem;
+  color: var(--green);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-weight: 900;
+  text-underline-offset: 0.24em;
+  overflow-wrap: anywhere;
 }
 
 .disclosures {
