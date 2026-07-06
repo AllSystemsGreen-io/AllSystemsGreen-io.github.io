@@ -17,22 +17,24 @@ function frame({ title, subtitle, accent, accent2, bg, panels, content, id }) {
   const panelMarkup = panels
     .map(
       (panel, index) => `
+      <g class="mock-panel mock-panel-${index}">
         <rect x="${panel.x}" y="${panel.y}" width="${panel.w}" height="${panel.h}" rx="10" fill="${panel.fill || '#111a17'}" stroke="${panel.stroke || 'rgba(255,255,255,.14)'}" stroke-width="1"/>
         <text x="${panel.x + 18}" y="${panel.y + 30}" class="kicker">${esc(panel.label)}</text>
         ${(panel.lines || [])
           .map(
             (line, lineIndex) => `
-              <rect x="${panel.x + 18}" y="${panel.y + 54 + lineIndex * 34}" width="${line.w}" height="9" rx="4.5" fill="${line.color || 'rgba(255,255,255,.28)'}"/>
-              <rect x="${panel.x + 18}" y="${panel.y + 70 + lineIndex * 34}" width="${Math.max(36, line.w * 0.58)}" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>`
+              <rect class="data-line data-line-${lineIndex}${line.color ? ' hot-line' : ''}" x="${panel.x + 18}" y="${panel.y + 54 + lineIndex * 34}" width="${line.w}" height="9" rx="4.5" fill="${line.color || 'rgba(255,255,255,.28)'}"/>
+              <rect class="data-line shadow-line data-line-${lineIndex}" x="${panel.x + 18}" y="${panel.y + 70 + lineIndex * 34}" width="${Math.max(36, line.w * 0.58)}" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>`
           )
           .join('')}
         ${(panel.badges || [])
           .map(
             (badge, badgeIndex) => `
-              <rect x="${panel.x + 18 + badgeIndex * 94}" y="${panel.y + panel.h - 38}" width="78" height="22" rx="11" fill="${badge.fill || accent}" opacity=".92"/>
+              <rect class="badge-chip badge-chip-${badgeIndex}" x="${panel.x + 18 + badgeIndex * 94}" y="${panel.y + panel.h - 38}" width="78" height="22" rx="11" fill="${badge.fill || accent}" opacity=".92"/>
               <text x="${panel.x + 57 + badgeIndex * 94}" y="${panel.y + panel.h - 23}" class="badge">${esc(badge.text)}</text>`
           )
-          .join('')}`
+          .join('')}
+      </g>`
     )
     .join('');
 
@@ -51,6 +53,14 @@ function frame({ title, subtitle, accent, accent2, bg, panels, content, id }) {
       <stop offset=".42" stop-color="${accent2}" stop-opacity=".18"/>
       <stop offset="1" stop-color="#000" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="${id}-scan" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".48" stop-color="${accent}" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="${id}-viewport">
+      <rect x="72" y="82" width="1056" height="596" rx="18"/>
+    </clipPath>
     <filter id="${id}-shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".32"/>
     </filter>
@@ -62,24 +72,77 @@ function frame({ title, subtitle, accent, accent2, bg, panels, content, id }) {
       .badge { font: 800 10px Inter, Arial, sans-serif; fill: #07110d; text-anchor: middle; letter-spacing: .04em; }
       .tiny { font: 700 11px Inter, Arial, sans-serif; fill: rgba(247,255,247,.5); letter-spacing: .06em; }
       .label { font: 700 15px Inter, Arial, sans-serif; fill: rgba(247,255,247,.76); letter-spacing: 0; }
+      .ambient-path { stroke-dasharray: 18 24; animation: dashFlow 22s linear infinite; }
+      .ambient-path.alt { animation-direction: reverse; animation-duration: 26s; }
+      .status-dot { animation: statusPulse 3.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .status-dot:nth-of-type(2) { animation-delay: -.9s; }
+      .status-dot:nth-of-type(3) { animation-delay: -1.8s; }
+      .mock-panel { animation: panelWake 8.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .mock-panel-1 { animation-delay: -1.4s; }
+      .mock-panel-2 { animation-delay: -2.8s; }
+      .mock-panel-3 { animation-delay: -4.2s; }
+      .data-line { animation: lineAlive 6.8s ease-in-out infinite; transform-box: fill-box; transform-origin: left center; }
+      .data-line-1 { animation-delay: -1.1s; }
+      .data-line-2 { animation-delay: -2.2s; }
+      .data-line-3 { animation-delay: -3.3s; }
+      .shadow-line { animation-name: lineGhost; }
+      .hot-line { filter: drop-shadow(0 0 7px rgba(247,255,247,.34)); }
+      .badge-chip { animation: chipPulse 7.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .badge-chip-1 { animation-delay: -2.4s; }
+      .flow-line { stroke-dasharray: 28 18; animation: dashFlow 8s linear infinite; }
+      .flow-node { animation: statusPulse 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .screen-scan { animation: scanPass 9.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes dashFlow { to { stroke-dashoffset: -240; } }
+      @keyframes statusPulse {
+        0%, 100% { opacity: .72; transform: scale(1); }
+        44% { opacity: 1; transform: scale(1.28); }
+      }
+      @keyframes panelWake {
+        0%, 100% { opacity: .88; transform: translateY(0); }
+        50% { opacity: 1; transform: translateY(-2px); }
+      }
+      @keyframes lineAlive {
+        0%, 100% { opacity: .76; transform: scaleX(.86); }
+        42% { opacity: 1; transform: scaleX(1); }
+        64% { opacity: .86; transform: scaleX(.94); }
+      }
+      @keyframes lineGhost {
+        0%, 100% { opacity: .42; transform: scaleX(.68); }
+        52% { opacity: .82; transform: scaleX(1); }
+      }
+      @keyframes chipPulse {
+        0%, 100% { opacity: .78; transform: translateY(0); }
+        46% { opacity: 1; transform: translateY(-1px); }
+      }
+      @keyframes scanPass {
+        0%, 18% { transform: translateX(-1260px) skewX(-14deg); opacity: 0; }
+        31% { opacity: .82; }
+        52%, 100% { transform: translateX(1260px) skewX(-14deg); opacity: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+      }
     </style>
   </defs>
   <rect width="1200" height="760" fill="url(#${id}-bg)"/>
   <rect width="1200" height="760" fill="url(#${id}-glow)"/>
-  <path d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="${accent}" stroke-width="2" opacity=".32"/>
-  <path d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="${accent2}" stroke-width="2" opacity=".26"/>
+  <path class="ambient-path" d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="${accent}" stroke-width="2" opacity=".32"/>
+  <path class="ambient-path alt" d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="${accent2}" stroke-width="2" opacity=".26"/>
   <g filter="url(#${id}-shadow)">
     <rect x="72" y="82" width="1056" height="596" rx="18" fill="rgba(4,10,8,.74)" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
     <rect x="72" y="82" width="1056" height="58" rx="18" fill="rgba(255,255,255,.08)"/>
-    <circle cx="104" cy="111" r="7" fill="#f06a5b"/>
-    <circle cx="130" cy="111" r="7" fill="#f4c95d"/>
-    <circle cx="156" cy="111" r="7" fill="#79d279"/>
+    <circle class="status-dot" cx="104" cy="111" r="7" fill="#f06a5b"/>
+    <circle class="status-dot" cx="130" cy="111" r="7" fill="#f4c95d"/>
+    <circle class="status-dot" cx="156" cy="111" r="7" fill="#79d279"/>
     <text x="190" y="116" class="nav">PUBLIC MOCK / PRIVATE DATA REDACTED</text>
-    <text x="990" y="116" class="tiny">STATIC PREVIEW</text>
+    <text x="990" y="116" class="tiny">LIVE-SAFE PREVIEW</text>
     <text x="112" y="206" class="title">${esc(title)}</text>
     <text x="114" y="240" class="sub">${esc(subtitle)}</text>
     ${panelMarkup}
     ${content || ''}
+    <g clip-path="url(#${id}-viewport)" pointer-events="none">
+      <rect class="screen-scan" x="-140" y="82" width="180" height="596" fill="url(#${id}-scan)" opacity=".72"/>
+    </g>
   </g>
 </svg>
 `;
@@ -139,8 +202,8 @@ const screenshots = [
       },
     ],
     content: `
-      <path d="M390 430 C414 430 407 430 424 430" stroke="#b7f36b" stroke-width="4" stroke-linecap="round" opacity=".75"/>
-      <path d="M728 430 C750 430 744 430 762 430" stroke="#39c6ad" stroke-width="4" stroke-linecap="round" opacity=".75"/>
+      <path class="flow-line" d="M390 430 C414 430 407 430 424 430" stroke="#b7f36b" stroke-width="4" stroke-linecap="round" opacity=".75"/>
+      <path class="flow-line" d="M728 430 C750 430 744 430 762 430" stroke="#39c6ad" stroke-width="4" stroke-linecap="round" opacity=".75"/>
       <text x="112" y="618" class="label">Built to preserve judgement, provenance, and review gates.</text>`,
   },
   {
@@ -193,8 +256,8 @@ const screenshots = [
       },
     ],
     content: `
-      <polyline points="454,516 500,472 548,498 600,394 646,420 718,350" fill="none" stroke="#66e2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="718" cy="350" r="8" fill="#b7f36b"/>
+      <polyline class="flow-line" points="454,516 500,472 548,498 600,394 646,420 718,350" fill="none" stroke="#66e2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="flow-node" cx="718" cy="350" r="8" fill="#b7f36b"/>
       <text x="112" y="618" class="label">Numbers, identifiers, addresses, and live strategy details are intentionally absent.</text>`,
   },
   {
@@ -264,6 +327,7 @@ const screenshots = [
       },
     ],
     content: `
+      <path class="flow-line" d="M332 430 H360 M580 430 H608 M828 430 H856" stroke="#b7f36b" stroke-width="4" stroke-linecap="round" opacity=".72"/>
       <text x="112" y="618" class="label">Operational work should be legible, reversible, and owned by a human.</text>`,
   },
   {
@@ -319,7 +383,7 @@ const screenshots = [
       },
     ],
     content: `
-      <path d="M400 414 C428 382 438 382 452 414 M746 414 C778 382 790 382 802 414" stroke="#39c6ad" stroke-width="3" fill="none" opacity=".76"/>
+      <path class="flow-line" d="M400 414 C428 382 438 382 452 414 M746 414 C778 382 790 382 802 414" stroke="#39c6ad" stroke-width="3" fill="none" opacity=".76"/>
       <text x="112" y="618" class="label">Built for continuity: fewer dropped threads, clearer provenance, better handoffs.</text>`,
   },
   {
@@ -375,10 +439,10 @@ const screenshots = [
       },
     ],
     content: `
-      <circle cx="594" cy="410" r="18" fill="#f2d35f"/>
-      <circle cx="656" cy="472" r="13" fill="#39c6ad"/>
-      <circle cx="542" cy="500" r="11" fill="#b7f36b"/>
-      <path d="M594 410 L656 472 L542 500 Z" fill="none" stroke="rgba(247,255,247,.5)" stroke-width="3"/>
+      <circle class="flow-node" cx="594" cy="410" r="18" fill="#f2d35f"/>
+      <circle class="flow-node" cx="656" cy="472" r="13" fill="#39c6ad"/>
+      <circle class="flow-node" cx="542" cy="500" r="11" fill="#b7f36b"/>
+      <path class="flow-line" d="M594 410 L656 472 L542 500 Z" fill="none" stroke="rgba(247,255,247,.5)" stroke-width="3"/>
       <text x="112" y="618" class="label">Civic systems should be source-backed, careful, and useful to ordinary people.</text>`,
   },
 ];

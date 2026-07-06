@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+      content="default-src 'self'; script-src 'none'; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
     >
     <meta name="referrer" content="no-referrer">
     <meta
@@ -43,6 +43,20 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-background" aria-hidden="true">
+          <video
+            class="hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster="assets/video/asg-hero-poster.jpg"
+          >
+            <source src="assets/video/asg-hero-loop.webm" type="video/webm">
+          </video>
+        </div>
+
         <div class="hero-copy">
           <p class="eyebrow">Project studio | Butte, Montana</p>
           <h1 id="hero-title">AllSystems<wbr>Green.io</h1>
@@ -58,29 +72,32 @@
           </div>
         </div>
 
-        <div class="hero-panel" aria-hidden="true">
-          <div class="panel-heading">
-            <span>GO / NO-GO</span>
-            <b>ASG LOOP</b>
-          </div>
-          <div class="panel-row">
-            <span>HUMAN MISSION</span>
-            <b class="go-state">GO</b>
-          </div>
-          <div class="panel-row">
-            <span>WORKER SUPPORT</span>
-            <b class="go-state">GO</b>
-          </div>
-          <div class="panel-row">
-            <span>RESULTS REQUIRED</span>
-            <b class="go-state">GO</b>
-          </div>
-          <div class="panel-row">
-            <span>PUBLIC DETAIL</span>
-            <b class="hold-state">LIMITED</b>
-          </div>
-          <div class="panel-readout">COLLAB CHANNEL OPEN</div>
-        </div>
+        <aside class="hero-systems" aria-label="Project capability map">
+          <p class="hud-label">Public-safe capability map</p>
+          <p class="hud-core">Human operator stays in command.</p>
+          <ul class="hud-list">
+            <li>
+              <strong>EstimateEngine</strong>
+              <span>Rough scope to reviewed handoff packets.</span>
+            </li>
+            <li>
+              <strong>TelemetryBase</strong>
+              <span>Memory tied to sources and freshness.</span>
+            </li>
+            <li>
+              <strong>CTRL</strong>
+              <span>Queues, approvals, runbooks, and controls.</span>
+            </li>
+            <li>
+              <strong>CivDex</strong>
+              <span>Public records shaped into civic signal.</span>
+            </li>
+            <li>
+              <strong>WhalePasta</strong>
+              <span>Automation monitored, limited, and stoppable.</span>
+            </li>
+          </ul>
+        </aside>
       </section>
 
       <section class="section intro-band" aria-labelledby="operating-title">
@@ -225,7 +242,12 @@
             collaboration would be useful. No intake maze. No newsletter ambush. Just the channel.
           </p>
           <a class="contact-email" href="mailto:olivia@allsystemsgreen.io?subject=AllSystemsGreen.io%20collaboration">olivia@allsystemsgreen.io</a>
-          <a class="button button-primary" href="mailto:olivia@allsystemsgreen.io?subject=AllSystemsGreen.io%20collaboration">Email collaboration channel</a>
+          <a
+            class="button button-primary"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=olivia%40allsystemsgreen.io&su=AllSystemsGreen.io%20collaboration"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Email collaboration channel</a>
         </div>
       </section>
 

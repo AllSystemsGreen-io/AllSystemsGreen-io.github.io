@@ -13,6 +13,14 @@
       <stop offset=".42" stop-color="#b7f36b" stop-opacity=".18"/>
       <stop offset="1" stop-color="#000" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="telemetrybase-scan" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".48" stop-color="#39c6ad" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="telemetrybase-viewport">
+      <rect x="72" y="82" width="1056" height="596" rx="18"/>
+    </clipPath>
     <filter id="telemetrybase-shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".32"/>
     </filter>
@@ -24,73 +32,132 @@
       .badge { font: 800 10px Inter, Arial, sans-serif; fill: #07110d; text-anchor: middle; letter-spacing: .04em; }
       .tiny { font: 700 11px Inter, Arial, sans-serif; fill: rgba(247,255,247,.5); letter-spacing: .06em; }
       .label { font: 700 15px Inter, Arial, sans-serif; fill: rgba(247,255,247,.76); letter-spacing: 0; }
+      .ambient-path { stroke-dasharray: 18 24; animation: dashFlow 22s linear infinite; }
+      .ambient-path.alt { animation-direction: reverse; animation-duration: 26s; }
+      .status-dot { animation: statusPulse 3.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .status-dot:nth-of-type(2) { animation-delay: -.9s; }
+      .status-dot:nth-of-type(3) { animation-delay: -1.8s; }
+      .mock-panel { animation: panelWake 8.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .mock-panel-1 { animation-delay: -1.4s; }
+      .mock-panel-2 { animation-delay: -2.8s; }
+      .mock-panel-3 { animation-delay: -4.2s; }
+      .data-line { animation: lineAlive 6.8s ease-in-out infinite; transform-box: fill-box; transform-origin: left center; }
+      .data-line-1 { animation-delay: -1.1s; }
+      .data-line-2 { animation-delay: -2.2s; }
+      .data-line-3 { animation-delay: -3.3s; }
+      .shadow-line { animation-name: lineGhost; }
+      .hot-line { filter: drop-shadow(0 0 7px rgba(247,255,247,.34)); }
+      .badge-chip { animation: chipPulse 7.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .badge-chip-1 { animation-delay: -2.4s; }
+      .flow-line { stroke-dasharray: 28 18; animation: dashFlow 8s linear infinite; }
+      .flow-node { animation: statusPulse 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .screen-scan { animation: scanPass 9.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes dashFlow { to { stroke-dashoffset: -240; } }
+      @keyframes statusPulse {
+        0%, 100% { opacity: .72; transform: scale(1); }
+        44% { opacity: 1; transform: scale(1.28); }
+      }
+      @keyframes panelWake {
+        0%, 100% { opacity: .88; transform: translateY(0); }
+        50% { opacity: 1; transform: translateY(-2px); }
+      }
+      @keyframes lineAlive {
+        0%, 100% { opacity: .76; transform: scaleX(.86); }
+        42% { opacity: 1; transform: scaleX(1); }
+        64% { opacity: .86; transform: scaleX(.94); }
+      }
+      @keyframes lineGhost {
+        0%, 100% { opacity: .42; transform: scaleX(.68); }
+        52% { opacity: .82; transform: scaleX(1); }
+      }
+      @keyframes chipPulse {
+        0%, 100% { opacity: .78; transform: translateY(0); }
+        46% { opacity: 1; transform: translateY(-1px); }
+      }
+      @keyframes scanPass {
+        0%, 18% { transform: translateX(-1260px) skewX(-14deg); opacity: 0; }
+        31% { opacity: .82; }
+        52%, 100% { transform: translateX(1260px) skewX(-14deg); opacity: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+      }
     </style>
   </defs>
   <rect width="1200" height="760" fill="url(#telemetrybase-bg)"/>
   <rect width="1200" height="760" fill="url(#telemetrybase-glow)"/>
-  <path d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="#39c6ad" stroke-width="2" opacity=".32"/>
-  <path d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="#b7f36b" stroke-width="2" opacity=".26"/>
+  <path class="ambient-path" d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="#39c6ad" stroke-width="2" opacity=".32"/>
+  <path class="ambient-path alt" d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="#b7f36b" stroke-width="2" opacity=".26"/>
   <g filter="url(#telemetrybase-shadow)">
     <rect x="72" y="82" width="1056" height="596" rx="18" fill="rgba(4,10,8,.74)" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
     <rect x="72" y="82" width="1056" height="58" rx="18" fill="rgba(255,255,255,.08)"/>
-    <circle cx="104" cy="111" r="7" fill="#f06a5b"/>
-    <circle cx="130" cy="111" r="7" fill="#f4c95d"/>
-    <circle cx="156" cy="111" r="7" fill="#79d279"/>
+    <circle class="status-dot" cx="104" cy="111" r="7" fill="#f06a5b"/>
+    <circle class="status-dot" cx="130" cy="111" r="7" fill="#f4c95d"/>
+    <circle class="status-dot" cx="156" cy="111" r="7" fill="#79d279"/>
     <text x="190" y="116" class="nav">PUBLIC MOCK / PRIVATE DATA REDACTED</text>
-    <text x="990" y="116" class="tiny">STATIC PREVIEW</text>
+    <text x="990" y="116" class="tiny">LIVE-SAFE PREVIEW</text>
     <text x="112" y="206" class="title">TelemetryBase</text>
     <text x="114" y="240" class="sub">Governed memory, documentation, permissions, and reusable operating context.</text>
     
+      <g class="mock-panel mock-panel-0">
         <rect x="112" y="292" width="284" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
         <text x="130" y="322" class="kicker">records</text>
         
-              <rect x="130" y="346" width="204" height="9" rx="4.5" fill="#39c6ad"/>
-              <rect x="130" y="362" width="118.32" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="130" y="380" width="238" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="130" y="396" width="138.04" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="130" y="414" width="184" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="130" y="430" width="106.72" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="130" y="448" width="216" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="130" y="464" width="125.27999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-0 hot-line" x="130" y="346" width="204" height="9" rx="4.5" fill="#39c6ad"/>
+              <rect class="data-line shadow-line data-line-0" x="130" y="362" width="118.32" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-1" x="130" y="380" width="238" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-1" x="130" y="396" width="138.04" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-2" x="130" y="414" width="184" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-2" x="130" y="430" width="106.72" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-3" x="130" y="448" width="216" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-3" x="130" y="464" width="125.27999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
         
-              <rect x="130" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
+              <rect class="badge-chip badge-chip-0" x="130" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
               <text x="169" y="555" class="badge">source</text>
-              <rect x="224" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
+              <rect class="badge-chip badge-chip-1" x="224" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
               <text x="263" y="555" class="badge">scope</text>
+      </g>
+      <g class="mock-panel mock-panel-1">
         <rect x="452" y="292" width="294" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
         <text x="470" y="322" class="kicker">skills</text>
         
-              <rect x="470" y="346" width="220" height="9" rx="4.5" fill="#b7f36b"/>
-              <rect x="470" y="362" width="127.6" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="470" y="380" width="192" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="470" y="396" width="111.35999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="470" y="414" width="250" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="470" y="430" width="145" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="470" y="448" width="170" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="470" y="464" width="98.6" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-0 hot-line" x="470" y="346" width="220" height="9" rx="4.5" fill="#b7f36b"/>
+              <rect class="data-line shadow-line data-line-0" x="470" y="362" width="127.6" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-1" x="470" y="380" width="192" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-1" x="470" y="396" width="111.35999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-2" x="470" y="414" width="250" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-2" x="470" y="430" width="145" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-3" x="470" y="448" width="170" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-3" x="470" y="464" width="98.6" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
         
-              <rect x="470" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
+              <rect class="badge-chip badge-chip-0" x="470" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
               <text x="509" y="555" class="badge">reuse</text>
-              <rect x="564" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
+              <rect class="badge-chip badge-chip-1" x="564" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
               <text x="603" y="555" class="badge">verify</text>
+      </g>
+      <g class="mock-panel mock-panel-2">
         <rect x="802" y="292" width="274" height="286" rx="10" fill="#111a17" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
         <text x="820" y="322" class="kicker">context</text>
         
-              <rect x="820" y="346" width="206" height="9" rx="4.5" fill="#f2d35f"/>
-              <rect x="820" y="362" width="119.47999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="820" y="380" width="180" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="820" y="396" width="104.39999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="820" y="414" width="230" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="820" y="430" width="133.39999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
-              <rect x="820" y="448" width="150" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="820" y="464" width="87" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-0 hot-line" x="820" y="346" width="206" height="9" rx="4.5" fill="#f2d35f"/>
+              <rect class="data-line shadow-line data-line-0" x="820" y="362" width="119.47999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-1" x="820" y="380" width="180" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-1" x="820" y="396" width="104.39999999999999" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-2" x="820" y="414" width="230" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-2" x="820" y="430" width="133.39999999999998" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
+              <rect class="data-line data-line-3" x="820" y="448" width="150" height="9" rx="4.5" fill="rgba(255,255,255,.28)"/>
+              <rect class="data-line shadow-line data-line-3" x="820" y="464" width="87" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>
         
-              <rect x="820" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
+              <rect class="badge-chip badge-chip-0" x="820" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
               <text x="859" y="555" class="badge">access</text>
-              <rect x="914" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
+              <rect class="badge-chip badge-chip-1" x="914" y="540" width="78" height="22" rx="11" fill="#39c6ad" opacity=".92"/>
               <text x="953" y="555" class="badge">memory</text>
+      </g>
     
-      <path d="M400 414 C428 382 438 382 452 414 M746 414 C778 382 790 382 802 414" stroke="#39c6ad" stroke-width="3" fill="none" opacity=".76"/>
+      <path class="flow-line" d="M400 414 C428 382 438 382 452 414 M746 414 C778 382 790 382 802 414" stroke="#39c6ad" stroke-width="3" fill="none" opacity=".76"/>
       <text x="112" y="618" class="label">Built for continuity: fewer dropped threads, clearer provenance, better handoffs.</text>
+    <g clip-path="url(#telemetrybase-viewport)" pointer-events="none">
+      <rect class="screen-scan" x="-140" y="82" width="180" height="596" fill="url(#telemetrybase-scan)" opacity=".72"/>
+    </g>
   </g>
 </svg>
