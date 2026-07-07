@@ -105,7 +105,7 @@
         state.commentOpen = false;
         state.drawerOpen = false;
         state.status = payload.status || `${action.label} saved`;
-        if (!stay && state.mode === 'single') state.selectedId = nextAfter(targetIds[targetIds.length - 1]);
+        if (!stay && state.mode === 'single') state.mode = 'table';
         await load();
       } catch (err) {
         state.status = err.message || 'Action failed.';
