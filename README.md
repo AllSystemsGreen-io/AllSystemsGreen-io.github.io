@@ -8,7 +8,7 @@ Static public site for AllSystemsGreen.io, LLC.
 - No public login, CMS, database, form backend, analytics, cookies, third-party scripts, or client-side secrets.
 - Security headers are defined in `_headers` for static hosts that support Netlify/Cloudflare Pages style header files.
 - Hetzner/nginx security headers are defined in `deploy/nginx/allsystemsgreen.io.conf`.
-- Project visuals are generated sanitized mockups, not production screenshots.
+- Project visuals are generated sanitized future-vision mockups, not production screenshots.
 
 ## Hetzner Hosting
 

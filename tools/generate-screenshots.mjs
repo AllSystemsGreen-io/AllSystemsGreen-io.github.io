@@ -13,442 +13,613 @@ const esc = (value) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 
-function frame({ title, subtitle, accent, accent2, bg, panels, content, id }) {
-  const panelMarkup = panels
+const textBlock = (lines, x, y, className, lineHeight = 19) =>
+  lines
+    .map((line, index) => `<text x="${x}" y="${y + index * lineHeight}" class="${className}">${esc(line)}</text>`)
+    .join('\n');
+
+function metricBars({ x, y, values, accent, accent2 }) {
+  return values
+    .map((value, index) => {
+      const width = 58 + value.width;
+      const color = value.hot ? accent : index % 2 ? accent2 : 'rgba(247,255,247,.26)';
+      return `
+        <text x="${x}" y="${y + index * 31}" class="metric-label">${esc(value.label)}</text>
+        <rect class="bar bar-${index}" x="${x}" y="${y + 9 + index * 31}" width="${width}" height="8" rx="4" fill="${color}" opacity="${value.hot ? '.92' : '.58'}"/>
+        <rect x="${x}" y="${y + 22 + index * 31}" width="${Math.max(42, Math.round(width * 0.52))}" height="4" rx="2" fill="rgba(247,255,247,.14)"/>`;
+    })
+    .join('\n');
+}
+
+function card({ card, index, x, y, w, h, accent, accent2 }) {
+  return `
+    <g class="vision-card vision-card-${index}">
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="rgba(3,8,6,.64)" stroke="rgba(247,255,247,.16)" stroke-width="1"/>
+      <rect x="${x}" y="${y}" width="${w}" height="34" rx="12" fill="rgba(247,255,247,.06)"/>
+      <text x="${x + 16}" y="${y + 23}" class="card-kicker">${esc(card.kicker)}</text>
+      <text x="${x + 16}" y="${y + 62}" class="card-title">${esc(card.title)}</text>
+      ${textBlock(card.lines, x + 16, y + 86, 'card-line', 19)}
+      ${metricBars({ x: x + 16, y: y + h - 69, values: card.metrics, accent, accent2 })}
+    </g>`;
+}
+
+function routeDiagram({ slide, accent, accent2 }) {
+  const nodeMarkup = slide.nodes
+    .map((node, index) => {
+      const cx = 420 + index * 178;
+      const cy = 570 + (index % 2 ? 16 : 0);
+      const fill = node.hot ? accent : index % 2 ? accent2 : '#f2d35f';
+      return `
+        <circle class="route-node route-node-${index}" cx="${cx}" cy="${cy}" r="${node.hot ? 13 : 9}" fill="${fill}"/>
+        <text x="${cx}" y="${cy + 34}" class="node-label">${esc(node.label)}</text>`;
+    })
+    .join('\n');
+
+  return `
+    <g class="route-diagram">
+      <path class="route-line" d="M420 570 C500 532 564 624 598 586 S742 548 776 570 S920 618 954 586" fill="none" stroke="${accent}" stroke-width="4" stroke-linecap="round"/>
+      ${nodeMarkup}
+      <text x="376" y="666" class="footer-line">${esc(slide.footer)}</text>
+    </g>`;
+}
+
+function slideMarkup({ slide, index, accent, accent2 }) {
+  const cardWidth = 216;
+  const cardHeight = 176;
+  const y = 304;
+  const xs = [376, 622, 868];
+  return `
+    <g class="slide slide-${index}">
+      <text x="376" y="216" class="slide-step">0${index + 1} / ${esc(slide.phase)}</text>
+      <text x="376" y="254" class="slide-title">${esc(slide.title)}</text>
+      ${textBlock(slide.caption, 378, 282, 'slide-copy', 18)}
+      <text x="974" y="224" class="slide-status">${esc(slide.status)}</text>
+      ${slide.cards
+        .map((slideCard, cardIndex) =>
+          card({
+            card: slideCard,
+            index: cardIndex,
+            x: xs[cardIndex],
+            y,
+            w: cardWidth,
+            h: cardHeight,
+            accent,
+            accent2,
+          })
+        )
+        .join('\n')}
+      ${routeDiagram({ slide, accent, accent2 })}
+    </g>`;
+}
+
+function tabMarkup({ slides, accent }) {
+  return slides
     .map(
-      (panel, index) => `
-      <g class="mock-panel mock-panel-${index}">
-        <rect x="${panel.x}" y="${panel.y}" width="${panel.w}" height="${panel.h}" rx="10" fill="${panel.fill || '#111a17'}" stroke="${panel.stroke || 'rgba(255,255,255,.14)'}" stroke-width="1"/>
-        <text x="${panel.x + 18}" y="${panel.y + 30}" class="kicker">${esc(panel.label)}</text>
-        ${(panel.lines || [])
-          .map(
-            (line, lineIndex) => `
-              <rect class="data-line data-line-${lineIndex}${line.color ? ' hot-line' : ''}" x="${panel.x + 18}" y="${panel.y + 54 + lineIndex * 34}" width="${line.w}" height="9" rx="4.5" fill="${line.color || 'rgba(255,255,255,.28)'}"/>
-              <rect class="data-line shadow-line data-line-${lineIndex}" x="${panel.x + 18}" y="${panel.y + 70 + lineIndex * 34}" width="${Math.max(36, line.w * 0.58)}" height="5" rx="2.5" fill="rgba(255,255,255,.12)"/>`
-          )
-          .join('')}
-        ${(panel.badges || [])
-          .map(
-            (badge, badgeIndex) => `
-              <rect class="badge-chip badge-chip-${badgeIndex}" x="${panel.x + 18 + badgeIndex * 94}" y="${panel.y + panel.h - 38}" width="78" height="22" rx="11" fill="${badge.fill || accent}" opacity=".92"/>
-              <text x="${panel.x + 57 + badgeIndex * 94}" y="${panel.y + panel.h - 23}" class="badge">${esc(badge.text)}</text>`
-          )
-          .join('')}
+      (slide, index) => `
+      <g class="rail-tab rail-tab-${index}">
+        <rect x="112" y="${286 + index * 74}" width="192" height="52" rx="8" fill="rgba(3,8,6,.5)" stroke="rgba(247,255,247,.14)"/>
+        <rect class="tab-signal" x="112" y="${286 + index * 74}" width="4" height="52" rx="2" fill="${accent}"/>
+        <text x="128" y="${307 + index * 74}" class="tab-index">0${index + 1}</text>
+        <text x="166" y="${307 + index * 74}" class="tab-title">${esc(slide.phase)}</text>
+        <text x="166" y="${328 + index * 74}" class="tab-note">${esc(slide.note)}</text>
       </g>`
     )
-    .join('');
+    .join('\n');
+}
 
+function visionMockup({ id, title, subtitle, accent, accent2, bg, slides }) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="${id}-title ${id}-desc">
-  <title id="${id}-title">${esc(title)} public-safe interface mockup</title>
-  <desc id="${id}-desc">A sanitized visual mockup with private data removed.</desc>
+  <title id="${id}-title">${esc(title)} future-vision public mockup</title>
+  <desc id="${id}-desc">A public-safe animated future-vision mockup. Private data, credentials, addresses, customer details, and live operating strategy are omitted.</desc>
   <defs>
     <linearGradient id="${id}-bg" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="${bg[0]}"/>
-      <stop offset=".52" stop-color="${bg[1]}"/>
+      <stop offset=".56" stop-color="${bg[1]}"/>
       <stop offset="1" stop-color="${bg[2]}"/>
     </linearGradient>
-    <radialGradient id="${id}-glow" cx=".76" cy=".14" r=".9">
-      <stop offset="0" stop-color="${accent}" stop-opacity=".5"/>
-      <stop offset=".42" stop-color="${accent2}" stop-opacity=".18"/>
+    <radialGradient id="${id}-glow" cx=".74" cy=".2" r=".86">
+      <stop offset="0" stop-color="${accent}" stop-opacity=".42"/>
+      <stop offset=".38" stop-color="${accent2}" stop-opacity=".16"/>
       <stop offset="1" stop-color="#000" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="${id}-scan" x1="0" x2="1" y1="0" y2="0">
       <stop offset="0" stop-color="#fff" stop-opacity="0"/>
-      <stop offset=".48" stop-color="${accent}" stop-opacity=".24"/>
+      <stop offset=".5" stop-color="${accent}" stop-opacity=".2"/>
       <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
-    <clipPath id="${id}-viewport">
-      <rect x="72" y="82" width="1056" height="596" rx="18"/>
-    </clipPath>
     <filter id="${id}-shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".32"/>
+      <feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#000" flood-opacity=".34"/>
     </filter>
+    <clipPath id="${id}-clip">
+      <rect x="64" y="74" width="1072" height="612" rx="20"/>
+    </clipPath>
     <style>
-      .title { font: 800 42px Inter, Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
-      .sub { font: 500 18px Inter, Arial, sans-serif; fill: rgba(247,255,247,.72); letter-spacing: 0; }
-      .nav { font: 700 13px Inter, Arial, sans-serif; fill: rgba(247,255,247,.56); letter-spacing: .06em; }
-      .kicker { font: 800 13px Inter, Arial, sans-serif; fill: rgba(247,255,247,.68); letter-spacing: .08em; text-transform: uppercase; }
-      .badge { font: 800 10px Inter, Arial, sans-serif; fill: #07110d; text-anchor: middle; letter-spacing: .04em; }
-      .tiny { font: 700 11px Inter, Arial, sans-serif; fill: rgba(247,255,247,.5); letter-spacing: .06em; }
-      .label { font: 700 15px Inter, Arial, sans-serif; fill: rgba(247,255,247,.76); letter-spacing: 0; }
-      .ambient-path { stroke-dasharray: 18 24; animation: dashFlow 22s linear infinite; }
-      .ambient-path.alt { animation-direction: reverse; animation-duration: 26s; }
-      .status-dot { animation: statusPulse 3.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      .status-dot:nth-of-type(2) { animation-delay: -.9s; }
-      .status-dot:nth-of-type(3) { animation-delay: -1.8s; }
-      .mock-panel { animation: panelWake 8.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      .mock-panel-1 { animation-delay: -1.4s; }
-      .mock-panel-2 { animation-delay: -2.8s; }
-      .mock-panel-3 { animation-delay: -4.2s; }
-      .data-line { animation: lineAlive 6.8s ease-in-out infinite; transform-box: fill-box; transform-origin: left center; }
-      .data-line-1 { animation-delay: -1.1s; }
-      .data-line-2 { animation-delay: -2.2s; }
-      .data-line-3 { animation-delay: -3.3s; }
-      .shadow-line { animation-name: lineGhost; }
-      .hot-line { filter: drop-shadow(0 0 7px rgba(247,255,247,.34)); }
-      .badge-chip { animation: chipPulse 7.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      .badge-chip-1 { animation-delay: -2.4s; }
-      .flow-line { stroke-dasharray: 28 18; animation: dashFlow 8s linear infinite; }
-      .flow-node { animation: statusPulse 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      .screen-scan { animation: scanPass 9.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes dashFlow { to { stroke-dashoffset: -240; } }
-      @keyframes statusPulse {
-        0%, 100% { opacity: .72; transform: scale(1); }
-        44% { opacity: 1; transform: scale(1.28); }
+      .title { font: 900 31px Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
+      .sub { font: 600 15px Arial, sans-serif; fill: rgba(247,255,247,.7); letter-spacing: 0; }
+      .nav { font: 800 12px Arial, sans-serif; fill: rgba(247,255,247,.58); letter-spacing: .08em; }
+      .rail-label, .slide-step, .card-kicker, .slide-status { font: 900 12px Arial, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+      .rail-label, .slide-step, .slide-status { fill: ${accent}; }
+      .rail-copy, .tab-note, .slide-copy, .card-line, .metric-label, .footer-line { font: 600 12px Arial, sans-serif; fill: rgba(247,255,247,.68); letter-spacing: 0; }
+      .tab-index { font: 900 13px Arial, sans-serif; fill: ${accent}; }
+      .tab-title { font: 900 13px Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
+      .slide-title { font: 900 25px Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
+      .card-kicker { fill: ${accent2}; }
+      .card-title { font: 900 16px Arial, sans-serif; fill: #f7fff7; letter-spacing: 0; }
+      .node-label { font: 800 11px Arial, sans-serif; fill: rgba(247,255,247,.72); text-anchor: middle; letter-spacing: 0; }
+      .slide { opacity: 0; transform: translateX(18px); animation-duration: 18s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+      .slide-0 { animation-name: showSlide0; }
+      .slide-1 { animation-name: showSlide1; }
+      .slide-2 { animation-name: showSlide2; }
+      .rail-tab { opacity: .54; animation-duration: 18s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+      .rail-tab-0 { animation-name: activeTab0; }
+      .rail-tab-1 { animation-name: activeTab1; }
+      .rail-tab-2 { animation-name: activeTab2; }
+      .tab-signal { opacity: .36; animation-duration: 18s; animation-iteration-count: infinite; }
+      .rail-tab-0 .tab-signal { animation-name: activeTab0; }
+      .rail-tab-1 .tab-signal { animation-name: activeTab1; }
+      .rail-tab-2 .tab-signal { animation-name: activeTab2; }
+      .vision-card { animation: cardLift 5.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .vision-card-1 { animation-delay: -.8s; }
+      .vision-card-2 { animation-delay: -1.6s; }
+      .bar { animation: barPulse 4.6s ease-in-out infinite; transform-box: fill-box; transform-origin: left center; }
+      .bar-1 { animation-delay: -.7s; }
+      .bar-2 { animation-delay: -1.4s; }
+      .route-line { stroke-dasharray: 26 18; animation: routeFlow 7.6s linear infinite; }
+      .route-node { animation: nodePulse 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      .route-node-1 { animation-delay: -.8s; }
+      .route-node-2 { animation-delay: -1.6s; }
+      .route-node-3 { animation-delay: -2.4s; }
+      .ambient { stroke-dasharray: 18 26; animation: routeFlow 22s linear infinite; }
+      .scan { animation: scanPass 10s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes showSlide0 {
+        0%, 27% { opacity: 1; transform: translateX(0); }
+        31%, 100% { opacity: 0; transform: translateX(-18px); }
       }
-      @keyframes panelWake {
-        0%, 100% { opacity: .88; transform: translateY(0); }
-        50% { opacity: 1; transform: translateY(-2px); }
+      @keyframes showSlide1 {
+        0%, 30% { opacity: 0; transform: translateX(18px); }
+        34%, 60% { opacity: 1; transform: translateX(0); }
+        64%, 100% { opacity: 0; transform: translateX(-18px); }
       }
-      @keyframes lineAlive {
-        0%, 100% { opacity: .76; transform: scaleX(.86); }
-        42% { opacity: 1; transform: scaleX(1); }
-        64% { opacity: .86; transform: scaleX(.94); }
+      @keyframes showSlide2 {
+        0%, 63% { opacity: 0; transform: translateX(18px); }
+        67%, 94% { opacity: 1; transform: translateX(0); }
+        98%, 100% { opacity: 0; transform: translateX(-18px); }
       }
-      @keyframes lineGhost {
-        0%, 100% { opacity: .42; transform: scaleX(.68); }
-        52% { opacity: .82; transform: scaleX(1); }
+      @keyframes activeTab0 {
+        0%, 27% { opacity: 1; }
+        31%, 100% { opacity: .42; }
       }
-      @keyframes chipPulse {
-        0%, 100% { opacity: .78; transform: translateY(0); }
-        46% { opacity: 1; transform: translateY(-1px); }
+      @keyframes activeTab1 {
+        0%, 30% { opacity: .42; }
+        34%, 60% { opacity: 1; }
+        64%, 100% { opacity: .42; }
+      }
+      @keyframes activeTab2 {
+        0%, 63% { opacity: .42; }
+        67%, 94% { opacity: 1; }
+        98%, 100% { opacity: .42; }
+      }
+      @keyframes cardLift {
+        0%, 100% { transform: translateY(0); opacity: .9; }
+        50% { transform: translateY(-3px); opacity: 1; }
+      }
+      @keyframes barPulse {
+        0%, 100% { transform: scaleX(.78); opacity: .58; }
+        46% { transform: scaleX(1); opacity: .98; }
+      }
+      @keyframes routeFlow { to { stroke-dashoffset: -240; } }
+      @keyframes nodePulse {
+        0%, 100% { transform: scale(1); opacity: .78; }
+        50% { transform: scale(1.24); opacity: 1; }
       }
       @keyframes scanPass {
-        0%, 18% { transform: translateX(-1260px) skewX(-14deg); opacity: 0; }
-        31% { opacity: .82; }
-        52%, 100% { transform: translateX(1260px) skewX(-14deg); opacity: 0; }
+        0%, 14% { transform: translateX(-1240px) skewX(-12deg); opacity: 0; }
+        28% { opacity: .74; }
+        48%, 100% { transform: translateX(1240px) skewX(-12deg); opacity: 0; }
       }
       @media (prefers-reduced-motion: reduce) {
         * { animation: none !important; }
+        .slide { opacity: 0 !important; transform: none !important; }
+        .slide-0 { opacity: 1 !important; }
+        .rail-tab { opacity: .54 !important; }
+        .rail-tab-0 { opacity: 1 !important; }
       }
     </style>
   </defs>
   <rect width="1200" height="760" fill="url(#${id}-bg)"/>
   <rect width="1200" height="760" fill="url(#${id}-glow)"/>
-  <path class="ambient-path" d="M-80 690 C170 560 266 738 487 601 C661 494 765 562 918 434 C1054 321 1135 360 1260 260" fill="none" stroke="${accent}" stroke-width="2" opacity=".32"/>
-  <path class="ambient-path alt" d="M-40 118 C199 214 314 56 516 180 C699 292 813 152 1020 206 C1114 231 1161 272 1240 236" fill="none" stroke="${accent2}" stroke-width="2" opacity=".26"/>
+  <path class="ambient" d="M-60 624 C210 496 314 700 530 548 C722 414 808 536 980 384 C1116 264 1172 296 1260 218" fill="none" stroke="${accent}" stroke-width="2" opacity=".3"/>
+  <path class="ambient" d="M-42 160 C180 242 302 96 492 188 C708 292 818 118 1052 198 C1130 224 1168 270 1250 232" fill="none" stroke="${accent2}" stroke-width="2" opacity=".24"/>
   <g filter="url(#${id}-shadow)">
-    <rect x="72" y="82" width="1056" height="596" rx="18" fill="rgba(4,10,8,.74)" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
-    <rect x="72" y="82" width="1056" height="58" rx="18" fill="rgba(255,255,255,.08)"/>
-    <circle class="status-dot" cx="104" cy="111" r="7" fill="#f06a5b"/>
-    <circle class="status-dot" cx="130" cy="111" r="7" fill="#f4c95d"/>
-    <circle class="status-dot" cx="156" cy="111" r="7" fill="#79d279"/>
-    <text x="190" y="116" class="nav">PUBLIC MOCK / PRIVATE DATA REDACTED</text>
-    <text x="990" y="116" class="tiny">LIVE-SAFE PREVIEW</text>
-    <text x="112" y="206" class="title">${esc(title)}</text>
-    <text x="114" y="240" class="sub">${esc(subtitle)}</text>
-    ${panelMarkup}
-    ${content || ''}
-    <g clip-path="url(#${id}-viewport)" pointer-events="none">
-      <rect class="screen-scan" x="-140" y="82" width="180" height="596" fill="url(#${id}-scan)" opacity=".72"/>
+    <rect x="64" y="74" width="1072" height="612" rx="20" fill="rgba(3,7,5,.78)" stroke="rgba(247,255,247,.18)" stroke-width="1.2"/>
+    <rect x="64" y="74" width="1072" height="60" rx="20" fill="rgba(247,255,247,.07)"/>
+    <circle cx="96" cy="104" r="7" fill="#e66a72"/>
+    <circle cx="122" cy="104" r="7" fill="#f2d35f"/>
+    <circle cx="148" cy="104" r="7" fill="${accent}"/>
+    <text x="184" y="109" class="nav">PUBLIC FUTURE MOCK / PRIVATE DETAILS OMITTED</text>
+    <text x="930" y="109" class="nav">VISION SEQUENCE</text>
+    <line x1="326" y1="156" x2="326" y2="654" stroke="rgba(247,255,247,.14)" stroke-width="1"/>
+    <text x="112" y="202" class="title">${esc(title)}</text>
+    ${textBlock(subtitle, 114, 238, 'sub', 18)}
+    <text x="112" y="270" class="rail-label">Future path</text>
+    ${tabMarkup({ slides, accent })}
+    <text x="112" y="574" class="rail-label">Public boundary</text>
+    ${textBlock(['Sanitized UI direction.', 'No PII, credentials, addresses,', 'live strategy, or client data.'], 114, 602, 'rail-copy', 18)}
+    ${slides.map((slide, index) => slideMarkup({ slide, index, accent, accent2 })).join('\n')}
+    <g clip-path="url(#${id}-clip)" pointer-events="none">
+      <rect class="scan" x="-150" y="74" width="176" height="612" fill="url(#${id}-scan)" opacity=".7"/>
     </g>
   </g>
 </svg>
 `;
 }
 
+const common = {
+  short: [
+    { label: 'Signal', width: 92, hot: true },
+    { label: 'Review', width: 128 },
+  ],
+  medium: [
+    { label: 'Source', width: 116, hot: true },
+    { label: 'Risk', width: 86 },
+  ],
+  long: [
+    { label: 'Ready', width: 142, hot: true },
+    { label: 'Trace', width: 100 },
+  ],
+};
+
 const screenshots = [
   {
     file: 'estimateengine.svg',
     id: 'estimateengine',
     title: 'EstimateEngine',
-    subtitle: 'Human-reviewed operating workflow from messy inputs to ready packets.',
-    accent: '#b7f36b',
-    accent2: '#39c6ad',
-    bg: ['#101510', '#182017', '#26311c'],
-    panels: [
+    subtitle: ['Future estimator cockpit.', 'Rough context to ready packets.'],
+    accent: '#35ff4f',
+    accent2: '#49d7c6',
+    bg: ['#08100b', '#111b13', '#202a16'],
+    slides: [
       {
-        x: 112,
-        y: 292,
-        w: 278,
-        h: 286,
-        label: 'intake',
-        lines: [
-          { w: 190, color: '#b7f36b' },
-          { w: 236 },
-          { w: 164 },
-          { w: 214 },
+        phase: 'Capture',
+        note: 'field chaos in',
+        title: 'Field intake becomes structured scope.',
+        caption: ['Notes, photos, missing dimensions, and assumptions are pulled into one review lane.'],
+        status: 'INTAKE CLEANUP',
+        footer: 'Nothing leaves the system until assumptions are visible.',
+        nodes: [
+          { label: 'notes', hot: true },
+          { label: 'photos' },
+          { label: 'dimensions' },
+          { label: 'flags' },
         ],
-        badges: [{ text: 'review' }, { text: 'source' }],
+        cards: [
+          { kicker: 'raw inputs', title: 'Job context', lines: ['Voice notes, sketches,', 'site photos, quantities.'], metrics: common.medium },
+          { kicker: 'exceptions', title: 'Missing facts', lines: ['Dimensions, access,', 'materials, exclusions.'], metrics: common.short },
+          { kicker: 'source stack', title: 'Evidence lane', lines: ['Every claim points', 'back to origin.'], metrics: common.long },
+        ],
       },
       {
-        x: 424,
-        y: 292,
-        w: 304,
-        h: 286,
-        label: 'reasoning',
-        lines: [
-          { w: 210, color: '#39c6ad' },
-          { w: 246 },
-          { w: 188 },
-          { w: 228 },
+        phase: 'Price',
+        note: 'logic checked',
+        title: 'Pricing logic stays reviewable.',
+        caption: ['Assemblies, vendor quotes, margin, and risk notes are normalized before approval.'],
+        status: 'HUMAN REVIEW',
+        footer: 'The goal is a proposal that can be checked, not a magic number.',
+        nodes: [
+          { label: 'assembly' },
+          { label: 'quote', hot: true },
+          { label: 'risk' },
+          { label: 'margin' },
         ],
-        badges: [{ text: 'options' }, { text: 'audit' }],
+        cards: [
+          { kicker: 'assemblies', title: 'Line logic', lines: ['Labor, materials,', 'conditions, options.'], metrics: common.short },
+          { kicker: 'vendor lane', title: 'Quote compare', lines: ['Supplier drift and', 'substitution notes.'], metrics: common.long },
+          { kicker: 'review', title: 'Approval queue', lines: ['Owner judgement before', 'client handoff.'], metrics: common.medium },
+        ],
       },
       {
-        x: 762,
-        y: 292,
-        w: 314,
-        h: 286,
-        label: 'ready packet',
-        lines: [
-          { w: 236, color: '#f2d35f' },
-          { w: 204 },
-          { w: 252 },
-          { w: 186 },
+        phase: 'Handoff',
+        note: 'packet out',
+        title: 'Ready packets make the next step obvious.',
+        caption: ['The future state is an auditable packet: estimate, assumptions, options, and change trail.'],
+        status: 'READY PACKET',
+        footer: 'The handoff carries context, source notes, and the reason for each decision.',
+        nodes: [
+          { label: 'estimate' },
+          { label: 'options' },
+          { label: 'approval', hot: true },
+          { label: 'handoff' },
         ],
-        badges: [{ text: 'verify' }, { text: 'handoff' }],
+        cards: [
+          { kicker: 'client view', title: 'Proposal', lines: ['Clean enough to send,', 'still honest inside.'], metrics: common.long },
+          { kicker: 'operator view', title: 'Change log', lines: ['What moved, why,', 'and who approved.'], metrics: common.medium },
+          { kicker: 'field view', title: 'Build packet', lines: ['Scope boundaries and', 'next actions.'], metrics: common.short },
+        ],
       },
     ],
-    content: `
-      <path class="flow-line" d="M390 430 C414 430 407 430 424 430" stroke="#b7f36b" stroke-width="4" stroke-linecap="round" opacity=".75"/>
-      <path class="flow-line" d="M728 430 C750 430 744 430 762 430" stroke="#39c6ad" stroke-width="4" stroke-linecap="round" opacity=".75"/>
-      <text x="112" y="618" class="label">Built to preserve judgement, provenance, and review gates.</text>`,
   },
   {
     file: 'whalepasta.svg',
     id: 'whalepasta',
     title: 'WhalePasta',
-    subtitle: 'Private decision-loop lab with risk gates, monitoring, and rollback habits.',
+    subtitle: ['Monitoring lab.', 'Signals, limits, stop rules.'],
     accent: '#66e2ff',
     accent2: '#f58d42',
-    bg: ['#071315', '#0d1c1c', '#1d2416'],
-    panels: [
+    bg: ['#061114', '#0c1a1c', '#1e2417'],
+    slides: [
       {
-        x: 112,
-        y: 292,
-        w: 286,
-        h: 286,
-        label: 'risk gates',
-        lines: [
-          { w: 210, color: '#66e2ff' },
-          { w: 160 },
-          { w: 230 },
+        phase: 'Signal',
+        note: 'watch first',
+        title: 'Signals earn trust before scale.',
+        caption: ['Future screens separate candidate signal, market context, and canary behavior.'],
+        status: 'SHADOW LANE',
+        footer: 'Research, paper, canary, and live lanes stay visually distinct.',
+        nodes: [
+          { label: 'cohort', hot: true },
+          { label: 'market' },
+          { label: 'canary' },
+          { label: 'live' },
         ],
-        badges: [{ text: 'cap' }, { text: 'pause' }],
+        cards: [
+          { kicker: 'candidate', title: 'Cohort view', lines: ['Ranked signals with', 'cooldown context.'], metrics: common.short },
+          { kicker: 'market', title: 'Depth check', lines: ['Liquidity, spread,', 'and noise flags.'], metrics: common.medium },
+          { kicker: 'canary', title: 'Tiny proof', lines: ['Behavior observed', 'before commitment.'], metrics: common.long },
+        ],
       },
       {
-        x: 432,
-        y: 292,
-        w: 326,
-        h: 286,
-        label: 'signal watch',
-        lines: [
-          { w: 250, color: '#b7f36b' },
-          { w: 206 },
-          { w: 272 },
+        phase: 'Risk',
+        note: 'limits visible',
+        title: 'The stop controls are first-class.',
+        caption: ['The vision is less auto-pilot, more instrumented lab with clear brakes.'],
+        status: 'CAPS ACTIVE',
+        footer: 'Caps, reconciliation, redemption, and rollback are part of the product surface.',
+        nodes: [
+          { label: 'cap' },
+          { label: 'reconcile', hot: true },
+          { label: 'redeem' },
+          { label: 'stop' },
         ],
-        badges: [{ text: 'paper' }, { text: 'canary' }],
+        cards: [
+          { kicker: 'exposure', title: 'Limit stack', lines: ['Per market, cohort,', 'and operator caps.'], metrics: common.medium },
+          { kicker: 'ledger', title: 'Reconcile', lines: ['Position truth vs', 'expected state.'], metrics: common.long },
+          { kicker: 'halt', title: 'Stop rules', lines: ['Bad data, thin books,', 'or stale heartbeat.'], metrics: common.short },
+        ],
       },
       {
-        x: 792,
-        y: 292,
-        w: 284,
-        h: 286,
-        label: 'audit trail',
-        lines: [
-          { w: 198, color: '#f58d42' },
-          { w: 230 },
-          { w: 176 },
+        phase: 'Explain',
+        note: 'why visible',
+        title: 'Every automated action needs a reason trail.',
+        caption: ['The future view makes attribution, confidence, and operator override legible.'],
+        status: 'AUDIT TRAIL',
+        footer: 'No identifiers, balances, live strategy, or wallet details belong in the public mock.',
+        nodes: [
+          { label: 'decision' },
+          { label: 'fill' },
+          { label: 'result', hot: true },
+          { label: 'learn' },
         ],
-        badges: [{ text: 'trace' }, { text: 'exit' }],
+        cards: [
+          { kicker: 'why', title: 'Decision record', lines: ['Trigger, data age,', 'confidence, override.'], metrics: common.long },
+          { kicker: 'what', title: 'Outcome map', lines: ['PnL attribution and', 'failure mode notes.'], metrics: common.short },
+          { kicker: 'next', title: 'Research loop', lines: ['What to demote, test,', 'or watch again.'], metrics: common.medium },
+        ],
       },
     ],
-    content: `
-      <polyline class="flow-line" points="454,516 500,472 548,498 600,394 646,420 718,350" fill="none" stroke="#66e2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle class="flow-node" cx="718" cy="350" r="8" fill="#b7f36b"/>
-      <text x="112" y="618" class="label">Numbers, identifiers, addresses, and live strategy details are intentionally absent.</text>`,
   },
   {
     file: 'ctrl.svg',
     id: 'ctrl',
     title: 'CTRL',
-    subtitle: 'Private operator cockpit for approvals, queues, maintenance, and review.',
-    accent: '#b7f36b',
+    subtitle: ['Operator cockpit.', 'Queues, gates, proof bundles.'],
+    accent: '#35ff4f',
     accent2: '#e66a72',
-    bg: ['#10120f', '#191d19', '#24271f'],
-    panels: [
+    bg: ['#0b0d09', '#151914', '#24261d'],
+    slides: [
       {
-        x: 112,
-        y: 292,
-        w: 220,
-        h: 286,
-        label: 'triage',
-        lines: [
-          { w: 146, color: '#e66a72' },
-          { w: 170 },
-          { w: 122 },
-          { w: 154 },
+        phase: 'Triage',
+        note: 'attention routed',
+        title: 'CTRL routes work to the right human moment.',
+        caption: ['The future surface turns noisy project state into a prioritized action table.'],
+        status: 'QUEUE LIVE',
+        footer: 'The operator sees what matters, why it matters, and what can wait.',
+        nodes: [
+          { label: 'event' },
+          { label: 'priority', hot: true },
+          { label: 'owner' },
+          { label: 'next' },
         ],
-        badges: [{ text: 'queue' }],
+        cards: [
+          { kicker: 'single actions', title: 'Review table', lines: ['One row per action,', 'with proof context.'], metrics: common.long },
+          { kicker: 'priority', title: 'Attention lane', lines: ['Severity, freshness,', 'and blocked status.'], metrics: common.short },
+          { kicker: 'ownership', title: 'Human owner', lines: ['Who decides and', 'who executes.'], metrics: common.medium },
+        ],
       },
       {
-        x: 360,
-        y: 292,
-        w: 220,
-        h: 286,
-        label: 'approve',
-        lines: [
-          { w: 170, color: '#b7f36b' },
-          { w: 136 },
-          { w: 154 },
-          { w: 118 },
+        phase: 'Act',
+        note: 'gated commands',
+        title: 'Commands carry runbooks and approval gates.',
+        caption: ['A useful control panel makes the safe path faster than improvising.'],
+        status: 'GATED ACTION',
+        footer: 'High-consequence changes should be deliberate, logged, and reversible where possible.',
+        nodes: [
+          { label: 'runbook' },
+          { label: 'approve', hot: true },
+          { label: 'execute' },
+          { label: 'verify' },
         ],
-        badges: [{ text: 'gate' }],
+        cards: [
+          { kicker: 'runbook', title: 'Procedure pane', lines: ['Steps, prerequisites,', 'rollback notes.'], metrics: common.medium },
+          { kicker: 'approval', title: 'Gate state', lines: ['Who approved, when,', 'and under what scope.'], metrics: common.long },
+          { kicker: 'verify', title: 'Result check', lines: ['Command output and', 'browser-visible proof.'], metrics: common.short },
+        ],
       },
       {
-        x: 608,
-        y: 292,
-        w: 220,
-        h: 286,
-        label: 'verify',
-        lines: [
-          { w: 158, color: '#39c6ad' },
-          { w: 130 },
-          { w: 174 },
-          { w: 142 },
+        phase: 'Record',
+        note: 'memory kept',
+        title: 'The work leaves a durable operating record.',
+        caption: ['Future CTRL keeps decisions, evidence, and maintenance notes attached to the project.'],
+        status: 'PROOF BUNDLE',
+        footer: 'The next operator should inherit context instead of rediscovering it.',
+        nodes: [
+          { label: 'proof' },
+          { label: 'notes' },
+          { label: 'status', hot: true },
+          { label: 'memory' },
         ],
-        badges: [{ text: 'proof' }],
-      },
-      {
-        x: 856,
-        y: 292,
-        w: 220,
-        h: 286,
-        label: 'archive',
-        lines: [
-          { w: 168, color: '#f2d35f' },
-          { w: 148 },
-          { w: 112 },
-          { w: 162 },
+        cards: [
+          { kicker: 'evidence', title: 'Proof bundle', lines: ['Screens, logs, links,', 'and changed files.'], metrics: common.short },
+          { kicker: 'status', title: 'Current truth', lines: ['What is live, stale,', 'blocked, or risky.'], metrics: common.medium },
+          { kicker: 'handoff', title: 'Next operator', lines: ['Concise context for', 'the next session.'], metrics: common.long },
         ],
-        badges: [{ text: 'record' }],
       },
     ],
-    content: `
-      <path class="flow-line" d="M332 430 H360 M580 430 H608 M828 430 H856" stroke="#b7f36b" stroke-width="4" stroke-linecap="round" opacity=".72"/>
-      <text x="112" y="618" class="label">Operational work should be legible, reversible, and owned by a human.</text>`,
   },
   {
     file: 'telemetrybase.svg',
     id: 'telemetrybase',
     title: 'TelemetryBase',
-    subtitle: 'Governed memory, documentation, permissions, and reusable operating context.',
-    accent: '#39c6ad',
-    accent2: '#b7f36b',
-    bg: ['#0b1513', '#121f1c', '#202514'],
-    panels: [
+    subtitle: ['Governed memory layer.', 'Sources, skills, freshness.'],
+    accent: '#49d7c6',
+    accent2: '#35ff4f',
+    bg: ['#071311', '#101d1a', '#1d2516'],
+    slides: [
       {
-        x: 112,
-        y: 292,
-        w: 284,
-        h: 286,
-        label: 'records',
-        lines: [
-          { w: 204, color: '#39c6ad' },
-          { w: 238 },
-          { w: 184 },
-          { w: 216 },
+        phase: 'Ingest',
+        note: 'sources in',
+        title: 'Useful memory starts with source-backed intake.',
+        caption: ['Docs, repo state, live checks, and conversations enter with provenance attached.'],
+        status: 'SOURCE GRAPH',
+        footer: 'Memory should know where it came from and when it might expire.',
+        nodes: [
+          { label: 'docs' },
+          { label: 'repo', hot: true },
+          { label: 'runtime' },
+          { label: 'notes' },
         ],
-        badges: [{ text: 'source' }, { text: 'scope' }],
+        cards: [
+          { kicker: 'documents', title: 'Source files', lines: ['Specs, docs, PDFs,', 'and project notes.'], metrics: common.long },
+          { kicker: 'runtime', title: 'Live facts', lines: ['Deploys, checks,', 'status outputs.'], metrics: common.short },
+          { kicker: 'conversation', title: 'Human context', lines: ['Decisions and', 'preference signals.'], metrics: common.medium },
+        ],
       },
       {
-        x: 452,
-        y: 292,
-        w: 294,
-        h: 286,
-        label: 'skills',
-        lines: [
-          { w: 220, color: '#b7f36b' },
-          { w: 192 },
-          { w: 250 },
-          { w: 170 },
+        phase: 'Govern',
+        note: 'trust scored',
+        title: 'Freshness and permissions are product features.',
+        caption: ['The future vision keeps access, stale facts, source confidence, and scope visible.'],
+        status: 'ACCESS AWARE',
+        footer: 'The system should distinguish known, guessed, stale, restricted, and verified.',
+        nodes: [
+          { label: 'scope' },
+          { label: 'freshness', hot: true },
+          { label: 'access' },
+          { label: 'trust' },
         ],
-        badges: [{ text: 'reuse' }, { text: 'verify' }],
+        cards: [
+          { kicker: 'freshness', title: 'Stale fact guard', lines: ['Dates, drift risk,', 'refresh prompts.'], metrics: common.medium },
+          { kicker: 'permission', title: 'Access map', lines: ['Who can read, use,', 'or export context.'], metrics: common.long },
+          { kicker: 'confidence', title: 'Truth state', lines: ['Verified, inferred,', 'or needs checking.'], metrics: common.short },
+        ],
       },
       {
-        x: 802,
-        y: 292,
-        w: 274,
-        h: 286,
-        label: 'context',
-        lines: [
-          { w: 206, color: '#f2d35f' },
-          { w: 180 },
-          { w: 230 },
-          { w: 150 },
+        phase: 'Reuse',
+        note: 'work carries',
+        title: 'Context becomes repeatable operating capability.',
+        caption: ['Skills, handoff briefs, project memory, and retrieval paths are reusable assets.'],
+        status: 'SKILL READY',
+        footer: 'The point is less re-explaining, more continuity across real work.',
+        nodes: [
+          { label: 'retrieve' },
+          { label: 'skill' },
+          { label: 'brief', hot: true },
+          { label: 'handoff' },
         ],
-        badges: [{ text: 'access' }, { text: 'memory' }],
+        cards: [
+          { kicker: 'skills', title: 'Operating patterns', lines: ['Reusable workflows', 'with local standards.'], metrics: common.short },
+          { kicker: 'briefs', title: 'Context packets', lines: ['Current state and', 'next best action.'], metrics: common.medium },
+          { kicker: 'agents', title: 'Shared memory', lines: ['Enough context to', 'continue safely.'], metrics: common.long },
+        ],
       },
     ],
-    content: `
-      <path class="flow-line" d="M400 414 C428 382 438 382 452 414 M746 414 C778 382 790 382 802 414" stroke="#39c6ad" stroke-width="3" fill="none" opacity=".76"/>
-      <text x="112" y="618" class="label">Built for continuity: fewer dropped threads, clearer provenance, better handoffs.</text>`,
   },
   {
     file: 'civdex.svg',
     id: 'civdex',
     title: 'CivDex',
-    subtitle: 'Source-backed civic contact intelligence for public-interest infrastructure.',
+    subtitle: ['Civic routing surface.', 'Sources, roles, careful exposure.'],
     accent: '#f2d35f',
-    accent2: '#39c6ad',
-    bg: ['#13130d', '#1d1d15', '#1a241d'],
-    panels: [
+    accent2: '#49d7c6',
+    bg: ['#111109', '#1a1a12', '#17251f'],
+    slides: [
       {
-        x: 112,
-        y: 292,
-        w: 304,
-        h: 286,
-        label: 'public source',
-        lines: [
-          { w: 226, color: '#f2d35f' },
-          { w: 246 },
-          { w: 194 },
-          { w: 220 },
+        phase: 'Source',
+        note: 'official first',
+        title: 'Civic data starts with cited public sources.',
+        caption: ['The future view favors official pages, meeting records, notices, and clear freshness.'],
+        status: 'CITED SOURCE',
+        footer: 'Source links, dates, and jurisdiction boundaries matter more than volume.',
+        nodes: [
+          { label: 'page', hot: true },
+          { label: 'record' },
+          { label: 'date' },
+          { label: 'scope' },
         ],
-        badges: [{ text: 'html' }, { text: 'cite' }],
+        cards: [
+          { kicker: 'crawl', title: 'Official pages', lines: ['City, county, agency,', 'and board records.'], metrics: common.long },
+          { kicker: 'meeting', title: 'Public context', lines: ['Agendas, minutes,', 'notices, packets.'], metrics: common.medium },
+          { kicker: 'freshness', title: 'Date checks', lines: ['What changed and', 'when it changed.'], metrics: common.short },
+        ],
       },
       {
-        x: 448,
-        y: 292,
-        w: 300,
-        h: 286,
-        label: 'graph',
-        lines: [
-          { w: 210, color: '#39c6ad' },
-          { w: 174 },
-          { w: 244 },
-          { w: 186 },
+        phase: 'Resolve',
+        note: 'people to offices',
+        title: 'Entity resolution must be careful, not creepy.',
+        caption: ['The future product resolves offices, roles, districts, and routing without reckless exposure.'],
+        status: 'CARE LAYER',
+        footer: 'The line between navigation and targeting needs to stay visible.',
+        nodes: [
+          { label: 'office' },
+          { label: 'role', hot: true },
+          { label: 'district' },
+          { label: 'route' },
         ],
-        badges: [{ text: 'office' }, { text: 'route' }],
+        cards: [
+          { kicker: 'offices', title: 'Role graph', lines: ['Office, term, scope,', 'and public channel.'], metrics: common.short },
+          { kicker: 'routing', title: 'Jurisdiction path', lines: ['Which office is', 'actually responsible.'], metrics: common.long },
+          { kicker: 'privacy', title: 'Exposure rules', lines: ['Suppress sensitive', 'or risky detail.'], metrics: common.medium },
+        ],
       },
       {
-        x: 780,
-        y: 292,
-        w: 296,
-        h: 286,
-        label: 'review',
-        lines: [
-          { w: 218, color: '#b7f36b' },
-          { w: 196 },
-          { w: 236 },
-          { w: 170 },
+        phase: 'Use',
+        note: 'citizen useful',
+        title: 'The output should help ordinary people act.',
+        caption: ['Future CivDex turns public records into understandable paths, not raw dumps.'],
+        status: 'PUBLIC GOOD',
+        footer: 'A useful civic layer should be source-backed, humble, and hard to abuse.',
+        nodes: [
+          { label: 'question' },
+          { label: 'office' },
+          { label: 'message', hot: true },
+          { label: 'followup' },
         ],
-        badges: [{ text: 'human' }, { text: 'care' }],
+        cards: [
+          { kicker: 'citizen path', title: 'Who to contact', lines: ['Plain-language route', 'with source citations.'], metrics: common.medium },
+          { kicker: 'issue map', title: 'What to ask', lines: ['Known responsibilities', 'and open questions.'], metrics: common.short },
+          { kicker: 'followup', title: 'Track response', lines: ['Dates, outcomes,', 'and next steps.'], metrics: common.long },
+        ],
       },
     ],
-    content: `
-      <circle class="flow-node" cx="594" cy="410" r="18" fill="#f2d35f"/>
-      <circle class="flow-node" cx="656" cy="472" r="13" fill="#39c6ad"/>
-      <circle class="flow-node" cx="542" cy="500" r="11" fill="#b7f36b"/>
-      <path class="flow-line" d="M594 410 L656 472 L542 500 Z" fill="none" stroke="rgba(247,255,247,.5)" stroke-width="3"/>
-      <text x="112" y="618" class="label">Civic systems should be source-backed, careful, and useful to ordinary people.</text>`,
   },
 ];
 
 for (const screenshot of screenshots) {
-  writeFileSync(join(outDir, screenshot.file), frame(screenshot));
+  const svg = visionMockup(screenshot)
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .join('\n')
+    .trimEnd();
+  writeFileSync(join(outDir, screenshot.file), `${svg}\n`);
 }
 
-console.log(`Generated ${screenshots.length} public-safe mockups in ${outDir}`);
+console.log(`Generated ${screenshots.length} future-vision mockups in ${outDir}`);
