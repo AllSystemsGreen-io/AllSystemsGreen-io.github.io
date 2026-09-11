@@ -373,6 +373,11 @@ h3 {
   font-size: clamp(1.05rem, 1.7vw, 1.24rem);
 }
 
+.hero-inquiries {
+  color: var(--paper);
+  font-size: 1rem;
+}
+
 .mission {
   max-width: 51rem;
   margin: 0;
@@ -612,6 +617,10 @@ h3 {
 
 .project-copy {
   padding: 0 0.25rem 0.25rem;
+}
+
+.project-mobile-caption {
+  display: none;
 }
 
 .project-kicker {
@@ -872,6 +881,10 @@ h3 {
     width: 100%;
   }
 
+  #contact .contact-email {
+    font-size: 1rem;
+  }
+
   .hero-video {
     object-position: 58% center;
   }
@@ -887,6 +900,25 @@ h3 {
 
   .panel-label b {
     text-align: left;
+  }
+
+  .has-mobile-captions .screen-frame {
+    display: none;
+  }
+
+  .project-mobile-caption {
+    display: block;
+    margin: 0;
+    color: var(--paper);
+    font-size: 1rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  .project-mobile-caption strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--amber);
   }
 
   .site-footer nav {
